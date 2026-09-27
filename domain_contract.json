@@ -1,27 +1,74 @@
 {
-  "contract_version": "1.0",
+  "contract_version": "1.1",
   "service_id": "mushroom-export",
   "service_name": "野生菌出口时效链",
-  "scope": "连接山区采集、菌种鉴别、加工批次、检疫证书、口岸预约和冷链运输。",
+  "scope": "连接山区采集、菌种鉴别、农户交售、加工分级、检疫证书、口岸预约与冷链运输，面向高海拔鲜松茸出境的时效协同。",
   "actors": [
     "菌农",
     "加工企业",
     "属地海关",
     "口岸海关",
-    "承运方"
+    "承运方",
+    "调度员"
   ],
   "states": [
     "已采集",
+    "已鉴别",
+    "已交售",
     "加工中",
     "待查验",
     "允许出运",
     "运输中",
     "退运处置"
   ],
+  "product_forms": [
+    "鲜品",
+    "冷冻",
+    "干制"
+  ],
+  "commands": [
+    "register_farmer",
+    "register_enterprise",
+    "register_officer",
+    "register_collection_point",
+    "record_collection",
+    "identify_species",
+    "deliver",
+    "start_processing",
+    "pack_box",
+    "split_box",
+    "merge_boxes",
+    "convert_form",
+    "define_rule",
+    "register_port",
+    "open_slot",
+    "plan_shipment",
+    "report_inspection",
+    "issue_certificate",
+    "request_correction",
+    "resolve_correction",
+    "book_port",
+    "rebook_port",
+    "delay_flight",
+    "open_excursion",
+    "resolve_excursion",
+    "evaluate_release",
+    "depart",
+    "report_rejection"
+  ],
+  "views": [
+    "box",
+    "settlement",
+    "impact",
+    "rules"
+  ],
   "invariants": [
-    "拆批与合箱后仍能追到原始采集批次",
-    "放行结论必须匹配目的地规则和出运时点",
-    "鲜度或温控越界后不得继续沿用旧计划"
+    "拆批、合箱以及转为冷冻或干制后，仍可沿来源关系追到原始采集批次、菌种鉴别结论与交售农户，且转换前后数量守恒",
+    "目的地规则具有生效时段，放行结论适用的规则版本按计划出运时间确定；出运时间变化必须按新时点重新判定",
+    "证书补正、口岸改约、航班延误、温控异常等事件发生后，旧放行结论立即失效，不得沿用，必须重新评估",
+    "同一查验以自然键全局去重，属地海关与口岸海关重复上报只记一次，双方机构同时留痕",
+    "企业之间商业资料互不可见；查验人员按职责读取且不可见结算价与买方合同；菌农只能查看本人交售与应付款，不暴露买方合同",
+    "拒收或退运后按来源比例精确定位受影响采集批次、数量及各菌农应付款",
+    "鲜品箱必须呈现剩余鲜度窗口，鲜度越界不得放行；转为冷冻或干制后鲜度时钟停止，按目的地相应规则判定"
   ]
 }
-
