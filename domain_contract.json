@@ -1,5 +1,5 @@
 {
-  "contract_version": "1.0",
+  "contract_version": "1.1",
   "service_id": "mushroom-export",
   "service_name": "野生菌出口时效链",
   "scope": "连接山区采集、菌种鉴别、加工批次、检疫证书、口岸预约和冷链运输。",
@@ -10,18 +10,53 @@
     "口岸海关",
     "承运方"
   ],
+  "roles": {
+    "enterprise": "加工企业：登记批次、收购交售、加工装箱、出运预约，仅见本企业资料",
+    "inspector_local": "属地海关：属地查检与证书签发补正，按职责读取",
+    "inspector_port": "口岸海关：口岸查验，按职责读取",
+    "settlement": "结算岗位：农户交售结算，不暴露买方合同",
+    "dispatcher": "调度员：查看鲜度窗口、当前阻塞、所用规则与替代路线",
+    "carrier": "承运方：上报冷链温度与航班延误"
+  },
+  "destinations": [
+    "日本",
+    "德国",
+    "越南"
+  ],
+  "product_forms": [
+    "鲜品",
+    "冷冻",
+    "干制"
+  ],
   "states": [
     "已采集",
     "加工中",
     "待查验",
     "允许出运",
     "运输中",
-    "退运处置"
+    "退运处置",
+    "已配载",
+    "已完成"
   ],
   "invariants": [
     "拆批与合箱后仍能追到原始采集批次",
     "放行结论必须匹配目的地规则和出运时点",
-    "鲜度或温控越界后不得继续沿用旧计划"
+    "鲜度或温控越界后不得继续沿用旧计划",
+    "同一查验重复上报只记一次",
+    "企业商业资料按角色隔离，农户结算不暴露买方合同"
+  ],
+  "events": [
+    "assessed",
+    "inspection_recorded",
+    "cert_issued",
+    "cert_corrected",
+    "booking_made",
+    "booking_changed",
+    "flight_delayed",
+    "temp_anomaly",
+    "temp_resolved",
+    "shipment_changed",
+    "departed",
+    "rejected"
   ]
 }
-
